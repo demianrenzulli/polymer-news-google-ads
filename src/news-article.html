@@ -173,16 +173,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </article>
 
       <aside>
-        <div class="ad-container">
-          <gpt-ad ad-slot-id="ad_slot_article"></gpt-ad>
-          <!--
-          <news-gpt-ad id="ad_slot_2"
-              ad-unit-path="/6355419/Travel/Europe/France/Paris"
-              ad-width="300" ad-height="250"></news-gpt-ad>
-          -->    
+
+        <div id="ad-container" class="ad-container">
         </div>
 
-
+        <!--
+        <div class="ad-container">
+          <news-gpt-ad id="ad_slot_2"
+              ad-unit-path="/6355419/Travel/Europe/France/Paris"
+              ad-width="300" ad-height="250"></news-gpt-ad>    
+        </div>
+        <gpt-ad ad-slot-id="ad_slot_article" class="ad_slot_article"></gpt-ad>
+        -->
 
         <a href="#" class="share-link" aria-label="Send by email">
           <iron-icon icon="mail"></iron-icon> Email
@@ -412,6 +414,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return this._desktopMediaQuery.matches;
       }
 
+      _loadGPTAd() {
+
+        //If Ad exists, remove it.
+        var ad_slot_article = Polymer.dom(this.root).querySelector(".ad_slot_article");
+        if(ad_slot_article) {
+          var ad_container = Polymer.dom(this.root).querySelector(".ad-container");
+          Polymer.dom(ad_container).removeChild(ad_slot_article);
+        }
+
+        //Dynamically generate GPT Ad Element and append to container.
+        //Example GPT Ad: <gpt-ad ad-slot-id="ad_slot_article" class="ad_slot_article"></gpt-ad>
+        var ad_container = Polymer.dom(this.root).querySelector(".ad-container");
+        ad_slot_article =  document.createElement('gpt-ad');
+        ad_slot_article.setAttribute('ad-slot-id', "ad_slot_article");
+        ad_slot_article.setAttribute('class', "ad_slot_article");
+
+        Polymer.dom(ad_container).appendChild(ad_slot_article);
+
+        console.log(ad_container);
+      }
+
       _loadArticle(html) {
         // If this._currentArticleCover isn't defined here, then it hasn't been stamped yet, and
         // the template already has the `fade-in` class.
@@ -420,6 +443,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         this.$.content.innerHTML = html;
         //ShadyCSS.styleSubtree(this.$.content);
+
+        //load ad dynamically
+       //this._loadGPTAd();
       }
 
       _articleChanged(article) {
